@@ -10,11 +10,13 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody m_Rigidbody;
     private Vector3 m_Moviment;
     private Quaternion m_Rotation = Quaternion.identity;
+    private AudioSource m_AudioSource;
 
     void Start()
     {
         m_Animator = GetComponent<Animator>();
         m_Rigidbody = GetComponent<Rigidbody>();
+        m_AudioSource = GetComponent<AudioSource>();
     }
 
     void FixedUpdate()
@@ -46,7 +48,26 @@ public class PlayerMovement : MonoBehaviour
         bool hasHorizontalInput = !Mathf.Approximately(horizontal, 0f);
         bool hasVerticalInput = !Mathf.Approximately(vertical, 0f);
         bool isWalking = hasHorizontalInput || hasVerticalInput;
+        
+        StartAnimation(isWalking);
+        PlayAudioSource(isWalking);
+    }
 
+    private void StartAnimation(bool isWalking)
+    {
         m_Animator.SetBool("IsWalking", isWalking);
+    }
+
+    private void PlayAudioSource(bool isWalking)
+    {
+        if (isWalking && !m_AudioSource.isPlaying)
+        {
+            m_AudioSource.Play();
+        }
+        else
+        {
+            m_AudioSource.Stop();
+
+        }
     }
 }
